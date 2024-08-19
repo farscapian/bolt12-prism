@@ -6,9 +6,11 @@ from pyln.client import RpcError
 from pyln.testing.fixtures import *  # noqa: F401,F403
 from pyln.testing.utils import sync_blockheight, wait_for
 
-plugin_path = os.path.join(os.path.dirname(__file__), "./bolt12-prism.py")
-plugin_opt = {"plugin": plugin_path}
-
+api_plugin_path = os.path.join(os.path.dirname(__file__), "./bolt12-prism.py")
+prism_payer_plugin_path =  os.path.join(os.path.dirname(__file__), "./prism-payer.py")
+plugin_opt = {
+    "plugins": [api_plugin_path, prism_payer_plugin_path]
+}
 
 # spin up a network
 def test_basic_test(node_factory):

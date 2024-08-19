@@ -120,8 +120,6 @@ def updateprism(plugin, prism_id, members):
 @plugin.method("prism-bindinglist")
 def list_bindings(plugin, offer_id=None):
     '''Lists all prism bindings.'''
-
-    bolt12_prism_response = None
     
     # if an offer is not supplied, we return all bindings.
     # can use the pnameX in rune construction to restrict this 
@@ -269,34 +267,34 @@ def prism_execute(plugin, prism_id, amount_msat=0, label=""):
             "prism_member_payouts": pay_results
         }
 
-@plugin.subscribe("invoice_payment")
-def on_payment(plugin, invoice_payment, **kwargs):
+# @plugin.subscribe("invoice_payment")
+# def on_payment(plugin, invoice_payment, **kwargs):
 
-    # try:
-    payment_label = invoice_payment["label"]
-    #plugin.log(f"payment_label: {payment_label}")
-    # invoices will always have a unique label
-    invoice = plugin.rpc.listinvoices(payment_label)["invoices"][0]
+#     # try:
+#     payment_label = invoice_payment["label"]
+#     #plugin.log(f"payment_label: {payment_label}")
+#     # invoices will always have a unique label
+#     invoice = plugin.rpc.listinvoices(payment_label)["invoices"][0]
 
-    if invoice is None:
-        return
+#     if invoice is None:
+#         return
 
-    # invoices will likely be generated from BOLT 12
-    if "local_offer_id" in invoice:
-        offer_id = invoice["local_offer_id"]
+#     # invoices will likely be generated from BOLT 12
+#     if "local_offer_id" in invoice:
+#         offer_id = invoice["local_offer_id"]
 
-    # TODO: return PrismBinding.get as class member rather than json
-    binding = None
+#     # TODO: return PrismBinding.get as class member rather than json
+#     binding = None
 
-    try:
-        binding = PrismBinding.get(plugin, offer_id)
-    except Exception as e:
-        plugin.log("Incoming payment not associated with prism binding. Skipping.", "info")
-        return
+#     try:
+#         binding = PrismBinding.get(plugin, offer_id)
+#     except Exception as e:
+#         plugin.log("Incoming payment not associated with prism binding. Skipping.", "info")
+#         return
 
-    # try:
-    amount_msat = invoice_payment['msat']
-    plugin.log(f"amount_msat: {amount_msat}")
-    binding.pay(amount_msat=int(amount_msat))
+#     # try:
+#     amount_msat = invoice_payment['msat']
+#     plugin.log(f"amount_msat: {amount_msat}")
+#     binding.pay(amount_msat=int(amount_msat))
 
 plugin.run()  # Run our plugin
